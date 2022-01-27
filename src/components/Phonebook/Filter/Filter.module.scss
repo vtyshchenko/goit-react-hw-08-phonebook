@@ -1,0 +1,14 @@
+@import '../variables.scss';
+
+.input {
+  display: block;
+  width: 100%;
+  margin-top: 5px;
+  outline: none;
+}
+
+.label {
+  display: block;
+  color: $label-color;
+  margin-bottom: 20px;
+}

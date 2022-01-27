@@ -1,0 +1,9 @@
+@import '../variables.scss';
+
+.item {
+  display: flex;
+  justify-content: space-between;
+  &:not(:last-child) {
+    margin-bottom: 10px;
+  }
+}

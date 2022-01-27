@@ -1,0 +1,14 @@
+@import './variables.scss';
+
+.componenet {
+  width: 450px;
+  background-color: $button-color;
+  border-radius: 15px;
+  box-shadow: $shadow;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.title {
+  margin-bottom: 15px;
+}
