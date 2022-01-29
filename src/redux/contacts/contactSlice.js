@@ -1,10 +1,12 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 
+const BASE_URL = 'https://61e9c3d87bc0550017bc646c.mockapi.io';
+
 export const fetchContacts = createAsyncThunk(
   'contacts/fetchContacts',
   async (_, { rejectWithValue }) => {
     try {
-      const response = await fetch('https://61e9c3d87bc0550017bc646c.mockapi.io/contacts');
+      const response = await fetch(`${BASE_URL}/contacts`);
       if (!response.ok) {
         throw new Error('Error fetching data from server!');
       }
@@ -21,7 +23,7 @@ export const deleteContacts = createAsyncThunk(
   'contacts/deleteContacts',
   async ({ id }, { rejectWithValue, dispatch }) => {
     try {
-      const response = await fetch(`https://61e9c3d87bc0550017bc646c.mockapi.io/contacts/${id}`, {
+      const response = await fetch(`${BASE_URL}/contacts/${id}`, {
         method: 'DELETE',
       });
 
@@ -39,7 +41,7 @@ export const deleteContacts = createAsyncThunk(
 export const addNewContact = createAsyncThunk(
   'contacts/addNewContact',
   async ({ name, phone }, { rejectWithValue, dispatch }) => {
-    let contactData = await fetch(`https://61e9c3d87bc0550017bc646c.mockapi.io/contacts`);
+    let contactData = await fetch(`${BASE_URL}/contacts`);
     contactData = await contactData.json();
 
     if (contactData.length > 0) {
@@ -56,7 +58,7 @@ export const addNewContact = createAsyncThunk(
           phone,
         };
 
-        const response = await fetch(`https://61e9c3d87bc0550017bc646c.mockapi.io/contacts`, {
+        const response = await fetch(`${BASE_URL}/contacts`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
