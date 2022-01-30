@@ -3,15 +3,14 @@ import { useSelector } from 'react-redux';
 
 import Navigation from '../Navigation/Navigation';
 import UserMenu from '../UserMenu/UserMenu';
+import Container from '../Container';
+import { CustomLink } from '../CustomLink/CustomLink';
 import authSelectors from '../../redux/auth/authSelectors';
 import styles from './Header.module.scss';
 
-import Container from '../Container';
-import { CustomLink } from '../CustomLink/CustomLink';
-
 export default function Header() {
-  const isLoggedIn = useSelector(authSelectors.getIsLoggedIn);
-  console.log('isLoggedIn', isLoggedIn);
+  const loggedIn = useSelector(authSelectors.getIsLoggedIn);
+
   return (
     <>
       <Container>
@@ -21,7 +20,7 @@ export default function Header() {
           </CustomLink>
 
           <CustomLink to="/contacts">Phonebook</CustomLink>
-          {isLoggedIn ? <UserMenu /> : <Navigation />}
+          {loggedIn ? <UserMenu /> : <Navigation />}
         </header>
 
         <Outlet />

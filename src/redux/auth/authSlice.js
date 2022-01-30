@@ -18,6 +18,12 @@ const authSlice = createSlice({
       state.isLoggedIn = false;
       state.error = null;
     },
+    [registerUser.rejected](state, action) {
+      state.user = initialState.user;
+      state.token = initialState.token;
+      state.isLoggedIn = false;
+      state.error = action.payload;
+    },
     [loginUser.fulfilled](state, action) {
       state.user = action.payload.user;
       state.token = action.payload.token;
@@ -25,8 +31,8 @@ const authSlice = createSlice({
       state.error = null;
     },
     [loginUser.rejected](state, action) {
-      state.user = action.payload.user;
-      state.token = action.payload.token;
+      state.user = initialState.user;
+      state.token = initialState.token;
       state.isLoggedIn = false;
       state.error = action.payload;
     },
