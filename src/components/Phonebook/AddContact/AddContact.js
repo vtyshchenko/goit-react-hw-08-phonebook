@@ -6,14 +6,14 @@ import styles from './AddContact.module.scss';
 
 function AddContact() {
   const [namePeople, setNamePeople] = useState('');
-  const [phone, setPhone] = useState('');
+  const [number, setNumber] = useState('');
   const dispatch = useDispatch();
 
   const handleChange = ({ target }) => {
     const { name, value } = target;
     switch (name) {
-      case 'phone':
-        setPhone(value);
+      case 'number':
+        setNumber(value);
         break;
       case 'namePeople':
         setNamePeople(value);
@@ -25,13 +25,13 @@ function AddContact() {
 
   function reset() {
     setNamePeople('');
-    setPhone('');
+    setNumber('');
   }
 
   const handleSubmit = event => {
     event.preventDefault();
 
-    dispatch(addNewContact({ name: namePeople, phone }));
+    dispatch(addNewContact({ name: namePeople, number }));
     reset();
   };
 
@@ -57,9 +57,9 @@ function AddContact() {
         <input
           className={styles.input}
           type="tel"
-          name="phone"
+          name="number"
           placeholder="123-55-66"
-          value={phone}
+          value={number}
           pattern="\+?\d{1,4}?[-.\s]?\(?\d{1,3}?\)?[-.\s]?\d{1,4}[-.\s]?\d{1,4}[-.\s]?\d{1,9}"
           title="Phone number must be digits and can contain spaces, dashes, parentheses and can start with +"
           required

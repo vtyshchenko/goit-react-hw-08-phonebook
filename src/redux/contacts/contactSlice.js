@@ -1,17 +1,14 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+import axios from 'axios';
 
-const BASE_URL = 'https://61e9c3d87bc0550017bc646c.mockapi.io';
+// axios.defaults.baseURL = 'https://connections-api.herokuapp.com';
 
+// axios.defaults.headers.common['Authorization'] = `Bearer ${tok}`;
 export const fetchContacts = createAsyncThunk(
   'contacts/fetchContacts',
   async (_, { rejectWithValue }) => {
     try {
-      const response = await fetch(`${BASE_URL}/contacts`);
-      if (!response.ok) {
-        throw new Error('Error fetching data from server!');
-      }
-      const data = await response.json();
-
+      const { data } = await axios.get(`/contacts`);
       return data;
     } catch (error) {
       return rejectWithValue(error.message);
@@ -21,17 +18,24 @@ export const fetchContacts = createAsyncThunk(
 
 export const deleteContacts = createAsyncThunk(
   'contacts/deleteContacts',
-  async ({ id }, { rejectWithValue, dispatch }) => {
+  async (userData, { rejectWithValue, dispatch }) => {
     try {
-      const response = await fetch(`${BASE_URL}/contacts/${id}`, {
-        method: 'DELETE',
-      });
+      await axios.delete(`/contacts/${userData.id}`);
 
-      if (!response.ok) {
-        throw new Error('Error delete data from server!');
-      }
+      dispatch(deleteContact(userData.id));
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  },
+);
 
-      dispatch(deleteContact({ id }));
+export const editContacts = createAsyncThunk(
+  'contacts/editContacts',
+  async (userData, { rejectWithValue, dispatch }) => {
+    try {
+      await axios.patch(`/contacts/${userData.id}`, userData);
+
+      dispatch(editContact(userData));
     } catch (error) {
       return rejectWithValue(error.message);
     }
@@ -40,41 +44,33 @@ export const deleteContacts = createAsyncThunk(
 
 export const addNewContact = createAsyncThunk(
   'contacts/addNewContact',
-  async ({ name, phone }, { rejectWithValue, dispatch }) => {
-    let contactData = await fetch(`${BASE_URL}/contacts`);
-    contactData = await contactData.json();
+  async ({ name, number }, { rejectWithValue, dispatch }) => {
+    let { data: contactData } = await axios.get(`/contacts`);
 
     if (contactData.length > 0) {
       const filteredContacts = contactData.filter(contactItem => {
-        return contactItem.name.toLowerCase() === name.toLowerCase() || contactItem.phone === phone;
+        return (
+          contactItem.name.toLowerCase() === name.toLowerCase() || contactItem.number === number
+        );
       });
+
       if (filteredContacts.length > 0) {
-        alert(`Contact with name '${name}' or '${phone}' is alredy in contacts`);
+        alert(`Contact with name '${name}' or '${number}' is alredy in contacts`);
+        return;
       }
-    } else {
-      try {
-        const contact = {
-          name,
-          phone,
-        };
+    }
 
-        const response = await fetch(`${BASE_URL}/contacts`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(contact),
-        });
+    try {
+      const contact = {
+        name,
+        number,
+      };
 
-        if (!response.ok) {
-          throw new Error('Error add data from server!');
-        }
-        const data = await response.json();
-
-        dispatch(addContact({ id: data.id, name, phone }));
-      } catch (error) {
-        return rejectWithValue(error.message);
-      }
+      const { data } = await axios.post(`/contacts`, contact);
+      dispatch(addContact({ id: data.id, name, number }));
+      return data;
+    } catch (error) {
+      return rejectWithValue(error.message);
     }
   },
 );
@@ -97,13 +93,20 @@ export const contactsSlice = createSlice({
       state.items.push({
         id: action.payload.id,
         name: action.payload.name,
-        phone: action.payload.phone,
+        number: action.payload.number,
       });
     },
     deleteContact(state, action) {
       state.items = state.items.filter(contactItem => {
-        return contactItem.id !== action.payload.id;
+        return contactItem.id !== action.payload;
       });
+    },
+    editContact(state, action) {
+      state.items = state.items.filter(contactItem => {
+        return contactItem.id === action.payload.id;
+      });
+      state.items.name = action.payload.name;
+      state.items.number = action.payload.number;
     },
     changeFilter(state, action) {
       state.filterText = action.payload.filterText;
@@ -126,6 +129,6 @@ export const contactsSlice = createSlice({
   },
 });
 
-export const { addContact, deleteContact, changeFilter } = contactsSlice.actions;
+export const { addContact, deleteContact, changeFilter, editContact } = contactsSlice.actions;
 
 export default contactsSlice.reducer;
