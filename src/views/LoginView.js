@@ -13,13 +13,11 @@ function LoginView() {
     const { name, value } = target;
     switch (name) {
       case 'email':
-        setEmail(value);
-        break;
+        return setEmail(value);
       case 'password':
-        setPassword(value);
-        break;
+        return setPassword(value);
       default:
-        break;
+        return;
     }
   };
 

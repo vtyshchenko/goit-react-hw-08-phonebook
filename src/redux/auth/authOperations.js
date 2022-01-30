@@ -2,6 +2,14 @@ import axios from 'axios';
 import { createAsyncThunk } from '@reduxjs/toolkit';
 
 axios.defaults.baseURL = 'https://connections-api.herokuapp.com';
+const token = {
+  set(tok) {
+    axios.defaults.common.Authorization = `Bearer ${tok}`;
+  },
+  reset() {
+    axios.defaults.common.Authorization = '';
+  },
+};
 
 export const registerUser = createAsyncThunk(
   'auth/register',
@@ -13,21 +21,8 @@ export const registerUser = createAsyncThunk(
       //   "password": "examplepassword"
       // }
       const { data } = await axios.post(`/users/signup`, userData);
-
+      token.set(data.token);
       return data;
-      //   switch (response.code) {
-      //     case 201:
-      //       alert('User was created.');
-      //       break;
-      //     case 400:
-      //       alert('Error user creating.');
-      //       break;
-      //     case 500:
-      //       alert('Server error.');
-      //       break;
-      //     default:
-      //       break;
-      //   }
     } catch (error) {
       return rejectWithValue(error.message);
     }
@@ -42,68 +37,28 @@ export const login = createAsyncThunk('auth/login', async (userData, { rejectWit
   console.log(userData);
   try {
     const { data } = await axios.post(`/users/login`, userData);
+    console.log('data', data);
+    token.set(data.token);
     return data;
-    // switch (response.code) {
-    //   case 200:
-    //     alert('User was logined.');
-    //     break;
-    //   case 400:
-    //     alert('login error.');
-    //     break;
-    //   default:
-    //     break;
-    // }
   } catch (error) {
     return rejectWithValue(error.message);
   }
 });
 
 export const logout = createAsyncThunk('auth/logout', async (userData, { rejectWithValue }) => {
-  // params = Authorization (string) Токен выданный текущему пользователю.
-
   try {
-    const { data } = await axios.post(`/users/logout`, userData);
-    return data;
-
-    // switch (response.code) {
-    //   case 200:
-    //     alert('User logout.');
-    //     break;
-    //   case 401:
-    //     alert('Error absent header wuth tiken.');
-    //     break;
-    //   case 500:
-    //     alert('Server error.');
-    //     break;
-    //   default:
-    //     break;
-    // }
+    await axios.post(`/users/logout`, userData);
+    token.reset();
   } catch (error) {
     return rejectWithValue(error.message);
   }
 });
 
-export const currentUser = createAsyncThunk(
-  'auth/current',
-
-  // userData = Authorization (string) Токен выданный текущему пользователю.
-  async (__, { rejectWithValue }) => {
-    try {
-      const { data } = await axios.get(`/users/current`);
-      return data;
-
-      // switch (response.code) {
-      //   case 200:
-      //     alert('Ok.');
-      //     break;
-      //   case 401:
-      //     alert('Error absent header wuth tiken.');
-      //     break;
-      //   default:
-      //     break;
-      // }
-    } catch (error) {
-      return rejectWithValue(error.message);
-    }
-  },
-);
+export const currentUser = createAsyncThunk('auth/current', async (__, { rejectWithValue }) => {
+  try {
+    const { data } = await axios.get(`/users/current`);
+    return data;
+  } catch (error) {
+    return rejectWithValue(error.message);
+  }
+});
