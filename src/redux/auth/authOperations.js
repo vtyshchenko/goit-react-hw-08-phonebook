@@ -44,11 +44,20 @@ export const logoutUser = createAsyncThunk('auth/logout', async (userData, { rej
   }
 });
 
-export const currentUser = createAsyncThunk('auth/current', async (__, { rejectWithValue }) => {
-  try {
-    const { data } = await axios.get(`/users/current`);
-    return data;
-  } catch (error) {
-    return rejectWithValue(error.message);
-  }
-});
+export const currentUser = createAsyncThunk(
+  'auth/current',
+  async (__, { rejectWithValue, getState }) => {
+    try {
+      const state = getState();
+      const persistToken = state.auth.token;
+      if (!persistToken) {
+        rejectWithValue('error');
+      }
+      token.set(persistToken);
+      const { data } = await axios.get(`/users/current`);
+      return data;
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  },
+);

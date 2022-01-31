@@ -53,7 +53,7 @@ function AddContact() {
       </label>
 
       <label className={styles.label}>
-        Number
+        Phone
         <input
           className={styles.input}
           type="tel"
