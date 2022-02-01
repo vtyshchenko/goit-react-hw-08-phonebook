@@ -9,9 +9,9 @@ function Filter() {
   const filterText = useSelector(state => state.contacts.filterText);
 
   return (
-    <>
+    <div className={styles.filter}>
       <label className={styles.label}>
-        Find contscts by name
+        Find contscts by name:
         <input
           className={styles.input}
           type="text"
@@ -26,7 +26,7 @@ function Filter() {
           }}
         />
       </label>
-    </>
+    </div>
   );
 }
 

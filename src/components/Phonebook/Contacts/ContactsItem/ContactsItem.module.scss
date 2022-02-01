@@ -1,4 +1,4 @@
-@import '../../variables.scss';
+@import '../../../../helpers/variables.scss';
 
 .button {
   font-weight: 500;
@@ -12,4 +12,28 @@
     background-color: $button-active-bg-color;
     box-shadow: $shadow-button;
   }
+}
+
+.buttonDelete {
+  composes: button;
+  background-color: $delete-bg-color;
+
+  &:hover,
+  &:focus {
+    background-color: $delete-active-bg-color;
+    box-shadow: $shadow-button;
+  }
+}
+
+.editContacts {
+  display: flex;
+  align-content: center;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
+.input {
+  width: 220px;
+  height: 25px;
 }

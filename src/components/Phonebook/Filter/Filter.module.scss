@@ -1,14 +1,21 @@
 @import '../variables.scss';
 
+.filter {
+  display: flex;
+}
+
 .input {
-  display: block;
-  width: 100%;
-  margin-top: 5px;
+  width: 300px;
+  margin-left: 20px;
   outline: none;
 }
 
 .label {
   display: block;
   color: $label-color;
+  width: 100%;
+  padding: 10px 0;
   margin-bottom: 20px;
+
+  border-bottom: 1px #0078bf solid;
 }

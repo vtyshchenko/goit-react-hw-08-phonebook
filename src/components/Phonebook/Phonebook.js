@@ -10,11 +10,12 @@ import { fetchContacts } from '../../redux/contacts/contactSlice';
 function Phonebook() {
   const { items: contacts, status, error } = useSelector(state => state.contacts);
   const dispatch = useDispatch();
+
   const isShowFilter = contacts && contacts.length > 1;
 
   useEffect(() => {
     dispatch(fetchContacts());
-  }, []);
+  }, [dispatch]);
 
   return (
     <div className={styles.componenet}>

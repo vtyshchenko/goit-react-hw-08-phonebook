@@ -34,8 +34,6 @@ function RegisterView() {
     event.preventDefault();
     dispatch(registerUser({ email, password, name: userName }));
 
-    console.log(email, password, userName);
-
     reset();
   };
 

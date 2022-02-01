@@ -24,9 +24,8 @@ function App() {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    console.log('11');
     dispatch(currentUser());
-  }, []);
+  }, [dispatch]);
 
   return (
     <>

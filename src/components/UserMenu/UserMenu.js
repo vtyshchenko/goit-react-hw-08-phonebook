@@ -9,7 +9,6 @@ function UserMenu() {
   const dispatch = useDispatch();
   const name = useSelector(authSelectors.getUserName);
   const avatar = defaultAvatar;
-  console.log('UserMenu');
 
   return (
     <div>

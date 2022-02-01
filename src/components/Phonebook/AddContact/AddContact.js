@@ -68,7 +68,7 @@ function AddContact() {
       </label>
 
       <button className={styles.button} type="submit">
-        Add contact
+        Add
       </button>
     </form>
   );

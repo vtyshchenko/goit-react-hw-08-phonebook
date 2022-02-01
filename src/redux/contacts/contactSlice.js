@@ -11,7 +11,6 @@ export const fetchContacts = createAsyncThunk(
   async (_, { rejectWithValue }) => {
     try {
       const { data } = await axios.get(`/contacts`);
-      console.log(data);
       return data;
     } catch (error) {
       return rejectWithValue(error.message);
@@ -35,11 +34,18 @@ export const deleteContacts = createAsyncThunk(
 export const editContacts = createAsyncThunk(
   'contacts/editContacts',
   async (userData, { rejectWithValue, dispatch }) => {
-    console.log('userData', userData);
+    const data = { name: userData.name, number: userData.number };
     try {
-      await axios.patch(`/contacts/${userData.id}`, userData);
+      const dataPatched = await axios.patch(`/contacts/${userData.id}`, data);
 
-      dispatch(editContact(userData));
+      dispatch(
+        editContact({
+          id: dataPatched.data.id,
+          name: dataPatched.data.name,
+          number: dataPatched.data.number,
+        }),
+      );
+      return dataPatched.data;
     } catch (error) {
       return rejectWithValue(error.message);
     }
@@ -106,11 +112,14 @@ export const contactsSlice = createSlice({
       });
     },
     editContact(state, action) {
-      state.items = state.items.filter(contactItem => {
-        return contactItem.id === action.payload.id;
+      state.items = state.items.map(contact => {
+        if (contact.id === action.payload.id) {
+          contact.name = action.payload.name;
+          contact.number = action.payload.number;
+        }
+        return contact;
       });
-      state.items.name = action.payload.name;
-      state.items.number = action.payload.number;
+      state.error = null;
     },
     changeFilter(state, action) {
       state.filterText = action.payload.filterText;
@@ -130,6 +139,13 @@ export const contactsSlice = createSlice({
       state.error = null;
     },
     [deleteContacts.rejected]: setError,
+    [editContacts.fulfilled]: (state, action) => {
+      state.status = 'resolved';
+    },
+    [editContacts.rejected]: (state, action) => {
+      state.status = 'rejected';
+      state.error = action.payload;
+    },
   },
 });
 

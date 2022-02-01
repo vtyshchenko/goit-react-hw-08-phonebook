@@ -19,13 +19,12 @@ const ContactsItem = ({ item }) => {
   const onEditClick = event => {
     event.target.disabled = true;
     setIsEdit(true);
-    // dispatch(editContacts({ id: item.id, name: namePeople, number }));
   };
 
   const onOkClick = event => {
     event.target.disabled = true;
-    setIsEdit(false);
     dispatch(editContacts({ id: item.id, name: namePeople, number }));
+    setIsEdit(false);
   };
 
   const onCancelClick = event => {
@@ -49,7 +48,7 @@ const ContactsItem = ({ item }) => {
   return (
     <>
       {isEdit ? (
-        <div>
+        <div className={styles.editContacts}>
           <input
             className={styles.input}
             type="text"
@@ -72,17 +71,19 @@ const ContactsItem = ({ item }) => {
             required
             onChange={handleChange}
           />
-          <button className={styles.button} id={`id${item.id}`} type="button" onClick={onOkClick}>
-            Ok
-          </button>
-          <button
-            className={styles.button}
-            id={`id${item.id}`}
-            type="button"
-            onClick={onCancelClick}
-          >
-            Cancel
-          </button>
+          <div>
+            <button className={styles.button} id={`id${item.id}`} type="button" onClick={onOkClick}>
+              Ok
+            </button>
+            <button
+              className={styles.button}
+              id={`id${item.id}`}
+              type="button"
+              onClick={onCancelClick}
+            >
+              Cancel
+            </button>
+          </div>
         </div>
       ) : (
         <>
@@ -100,7 +101,7 @@ const ContactsItem = ({ item }) => {
               Edit
             </button>
             <button
-              className={styles.button}
+              className={styles.buttonDelete}
               id={`id${item.id}`}
               type="button"
               onClick={onDeleteClick}

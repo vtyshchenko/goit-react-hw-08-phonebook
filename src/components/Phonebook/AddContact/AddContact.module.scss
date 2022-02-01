@@ -1,7 +1,9 @@
 @import '../variables.scss';
 
 .form {
-  display: block;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   border-top: 2px $button-bg-color solid;
   border-bottom: 2px $button-bg-color solid;
   margin-bottom: 20px;
@@ -9,24 +11,24 @@
 }
 
 .input {
-  display: block;
-  width: 100%;
-  margin-top: 5px;
+  width: 220px;
+  margin-left: 15px;
 }
 
 .label {
-  display: block;
+  display: flex;
+  justify-content: space-between;
   color: $label-color;
-  margin-bottom: 10px;
+  align-items: center;
 }
 
 .button {
-  width: 120px;
+  margin-left: 20px;
+  width: 55px;
   height: 30px;
   color: $button-color;
   background-color: $button-bg-color;
   border-radius: 15px;
-  padding-left: 3px;
 
   &:hover,
   &:focus {
