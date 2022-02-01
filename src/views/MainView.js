@@ -1,8 +1,8 @@
-import styles from './views.module.scss';
-import { CustomLink } from '../components/CustomLink/CustomLink';
 import { useSelector } from 'react-redux';
 
+import { CustomLink } from '../components/CustomLink/CustomLink';
 import authSelectors from '../redux/auth/authSelectors';
+import styles from './views.module.scss';
 
 export default function MainView() {
   const notLoggedIn = !useSelector(authSelectors.getIsLoggedIn);
