@@ -19,7 +19,7 @@ export default function Header() {
             <h2>Phonebook</h2>
           </CustomLink>
 
-          <CustomLink to="/contacts">Contacts</CustomLink>
+          {loggedIn && <CustomLink to="/contacts">Contacts</CustomLink>}
           {loggedIn ? <UserMenu /> : <Navigation />}
         </header>
 

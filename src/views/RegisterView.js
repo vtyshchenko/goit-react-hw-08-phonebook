@@ -39,6 +39,7 @@ function RegisterView() {
 
   return (
     <form onSubmit={handleSubmit} className={styles.form} autoComplete="off">
+      <h2 className={styles.formTitle}>Please enter data:</h2>
       <label className={styles.label}>
         Name
         <input

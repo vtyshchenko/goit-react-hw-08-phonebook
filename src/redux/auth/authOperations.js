@@ -11,12 +11,34 @@ const token = {
     axios.defaults.headers.common['Authorization'] = '';
   },
 };
+function showError(error) {
+  if (error.response) {
+    console.log(error.response.status);
+    switch (error.response.status) {
+      case 400:
+        alert('User registration/login error');
+        break;
+      case 401:
+        alert('There is no title with authorization token.');
+        break;
+      case 500:
+        alert('Server error');
+        break;
+      default:
+        break;
+    }
+  } else {
+    alert('Error', error.message);
+  }
+}
 
 export const registerUser = createAsyncThunk(
   'auth/register',
   async (userData, { rejectWithValue }) => {
     try {
-      const { data } = await axios.post(`/users/signup`, userData);
+      const responce = await axios.post(`/users/signup`, userData).catch(showError);
+      console.log('responce', responce);
+      const { data } = responce;
       console.log('data', data);
       token.set(data.token);
       return data;
@@ -29,7 +51,9 @@ export const registerUser = createAsyncThunk(
 
 export const loginUser = createAsyncThunk('auth/login', async (userData, { rejectWithValue }) => {
   try {
-    const { data } = await axios.post(`/users/login`, userData);
+    const responce = await axios.post(`/users/login`, userData).catch(showError);
+    console.log('responce', responce);
+    const { data } = responce;
     console.log('data', data);
     data && data.token && token.set(data.token);
     return data;
@@ -41,7 +65,7 @@ export const loginUser = createAsyncThunk('auth/login', async (userData, { rejec
 
 export const logoutUser = createAsyncThunk('auth/logout', async (userData, { rejectWithValue }) => {
   try {
-    await axios.post(`/users/logout`, userData);
+    await axios.post(`/users/logout`, userData).catch(showError);
     token.reset();
   } catch (error) {
     console.log('error', error);
@@ -60,7 +84,7 @@ export const currentUser = createAsyncThunk(
         return rejectWithValue('error');
       }
       token.set(persistToken);
-      const { data } = await axios.get(`/users/current`);
+      const { data } = await axios.get(`/users/current`).catch(showError);
       console.log('data', data);
       return data;
     } catch (error) {

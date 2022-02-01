@@ -6,11 +6,35 @@ import axios from 'axios';
 // ​​name: "axios defaults"
 // ​​number: "111-44-55"
 // axios.defaults.headers.common['Authorization'] = `Bearer ${tok}`;
+
+function showError(error) {
+  if (error.response) {
+    switch (error.response.status) {
+      case 400:
+        alert('Contact create/update error.');
+        break;
+      case 401:
+        alert('There is no title with authorization token.');
+        break;
+      case 404:
+        alert('The collections of this owner do not exist.');
+        break;
+      case 500:
+        alert('Server error');
+        break;
+      default:
+        break;
+    }
+  } else {
+    alert('Error', error.message);
+  }
+}
+
 export const fetchContacts = createAsyncThunk(
   'contacts/fetchContacts',
   async (_, { rejectWithValue }) => {
     try {
-      const { data } = await axios.get(`/contacts`);
+      const { data } = await axios.get(`/contacts`).catch(showError);
       return data;
     } catch (error) {
       return rejectWithValue(error.message);
@@ -22,7 +46,7 @@ export const deleteContacts = createAsyncThunk(
   'contacts/deleteContacts',
   async (userData, { rejectWithValue, dispatch }) => {
     try {
-      await axios.delete(`/contacts/${userData.id}`);
+      await axios.delete(`/contacts/${userData.id}`).catch(showError);
 
       dispatch(deleteContact(userData.id));
     } catch (error) {
@@ -36,7 +60,7 @@ export const editContacts = createAsyncThunk(
   async (userData, { rejectWithValue, dispatch }) => {
     const data = { name: userData.name, number: userData.number };
     try {
-      const dataPatched = await axios.patch(`/contacts/${userData.id}`, data);
+      const dataPatched = await axios.patch(`/contacts/${userData.id}`, data).catch(showError);
 
       dispatch(
         editContact({
@@ -76,7 +100,22 @@ export const addNewContact = createAsyncThunk(
         number,
       };
 
-      const { data } = await axios.post(`/contacts`, contact);
+      const { data } = await axios.post(`/contacts`, contact).catch(function (error) {
+        if (error.response) {
+          switch (error.response.status) {
+            case 400:
+              alert('Create accaount error');
+              break;
+            case 401:
+              alert('There is no title with authorization token.');
+              break;
+            default:
+              break;
+          }
+        } else {
+          alert('Error', error.message);
+        }
+      });
       dispatch(addContact({ id: data.id, name, number }));
       return data;
     } catch (error) {

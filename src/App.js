@@ -1,5 +1,5 @@
 import { Routes, Route } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { React, lazy, Suspense, useEffect } from 'react';
 
 import './App.scss';
@@ -23,52 +23,58 @@ const NotFoundView = lazy(() =>
 
 function App() {
   const dispatch = useDispatch();
-
+  const stateApp = useSelector(state => state.auth);
+  const isFatchingCurrentUser =
+    ((stateApp.token && stateApp.user.name) || (!stateApp.token && !stateApp.user.name)) &&
+    !stateApp.isFetchingCurrent;
   useEffect(() => {
     dispatch(currentUser());
   }, [dispatch]);
 
   return (
-    <>
-      <Suspense
-        fallback={
-          <>
-            <h1>LOADING...</h1>
-          </>
-        }
-      >
-        <Routes>
-          <Route path="/" element={<Header />}>
-            <Route index element={<MainView />} />
-            <Route
-              path="contacts"
-              element={
-                <PrivateRoute redirectTo="/">
-                  <PhonebookView />
-                </PrivateRoute>
-              }
-            />
-            <Route
-              path="login"
-              element={
-                <PublicRoute redirectTo="/contacts" restricted>
-                  <LoginView />
-                </PublicRoute>
-              }
-            />
-            <Route
-              path="register"
-              element={
-                <PublicRoute redirectTo="/contacts" restricted>
-                  <RegisterView />
-                </PublicRoute>
-              }
-            />
-            <Route path="*" element={<NotFoundView />} />
-          </Route>
-        </Routes>
-      </Suspense>
-    </>
+    isFatchingCurrentUser && (
+      <>
+        (
+        <Suspense
+          fallback={
+            <>
+              <h1>LOADING...</h1>
+            </>
+          }
+        >
+          <Routes>
+            <Route path="/" element={<Header />}>
+              <Route index element={<MainView />} />
+              <Route
+                path="contacts"
+                element={
+                  <PrivateRoute redirectTo="/">
+                    <PhonebookView />
+                  </PrivateRoute>
+                }
+              />
+              <Route
+                path="login"
+                element={
+                  <PublicRoute redirectTo="/contacts" restricted>
+                    <LoginView />
+                  </PublicRoute>
+                }
+              />
+              <Route
+                path="register"
+                element={
+                  <PublicRoute redirectTo="/contacts" restricted>
+                    <RegisterView />
+                  </PublicRoute>
+                }
+              />
+              <Route path="*" element={<NotFoundView />} />
+            </Route>
+          </Routes>
+        </Suspense>
+      </>
+    )
   );
 }
 

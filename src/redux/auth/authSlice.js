@@ -5,6 +5,7 @@ const initialState = {
   user: { name: null, email: null },
   token: null,
   isLoggedIn: false,
+  isFetchingCurrent: false,
   error: null,
 };
 
@@ -42,10 +43,19 @@ const authSlice = createSlice({
       state.isLoggedIn = initialState.isLoggedIn;
       state.error = null;
     },
+    [currentUser.pending](state, action) {
+      state.isFetchingCurrent = true;
+    },
+    [currentUser.rejected](state, action) {
+      state.error = action.payload;
+      state.isFetchingCurrent = false;
+    },
     [currentUser.fulfilled](state, action) {
       state.user = { ...action.payload };
       state.isLoggedIn = true;
       state.error = null;
+
+      state.isFetchingCurrent = false;
     },
   },
 });

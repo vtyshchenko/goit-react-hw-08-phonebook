@@ -35,6 +35,7 @@ function LoginView() {
 
   return (
     <form onSubmit={handleSubmit} className={styles.form}>
+      <h2 className={styles.formTitle}>Please enter data:</h2>
       <label className={styles.label}>
         E-mail
         <input
