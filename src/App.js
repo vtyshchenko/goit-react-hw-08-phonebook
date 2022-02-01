@@ -1,11 +1,12 @@
-import { Routes, Route, Navigate } from 'react-router-dom';
-import { useSelector, useDispatch } from 'react-redux';
+import { Routes, Route } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
 import { React, lazy, Suspense, useEffect } from 'react';
 
 import './App.scss';
 
-import authSelectors from './redux/auth/authSelectors';
 import Header from './components/Header/Header';
+import PrivateRoute from './components/PrivateRoute/PrivateRoute';
+import PublicRoute from './components/PublicRoute/PublicRoute';
 import { currentUser } from './redux/auth/authOperations';
 
 const MainView = lazy(() => import('./views/MainView.js' /* webpackChunkName: "main-view" */));
@@ -21,15 +22,12 @@ const NotFoundView = lazy(() =>
 );
 
 function App() {
-  const loggedIn = useSelector(authSelectors.getIsLoggedIn);
-
   const dispatch = useDispatch();
 
   useEffect(() => {
     dispatch(currentUser());
   }, [dispatch]);
 
-  console.log(loggedIn);
   return (
     <>
       <Suspense
@@ -44,10 +42,28 @@ function App() {
             <Route index element={<MainView />} />
             <Route
               path="contacts"
-              element={loggedIn ? <PhonebookView /> : <Navigate to="../login" />}
+              element={
+                <PrivateRoute redirectTo="/">
+                  <PhonebookView />
+                </PrivateRoute>
+              }
             />
-            <Route path="login" element={loggedIn ? <Navigate to="../" /> : <LoginView />} />
-            <Route path="register" element={loggedIn ? <Navigate to="../" /> : <RegisterView />} />
+            <Route
+              path="login"
+              element={
+                <PublicRoute redirectTo="/contacts" restricted>
+                  <LoginView />
+                </PublicRoute>
+              }
+            />
+            <Route
+              path="register"
+              element={
+                <PublicRoute redirectTo="/contacts" restricted>
+                  <RegisterView />
+                </PublicRoute>
+              }
+            />
             <Route path="*" element={<NotFoundView />} />
           </Route>
         </Routes>
