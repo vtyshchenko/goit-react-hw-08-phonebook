@@ -17,9 +17,11 @@ export const registerUser = createAsyncThunk(
   async (userData, { rejectWithValue }) => {
     try {
       const { data } = await axios.post(`/users/signup`, userData);
+      console.log('data', data);
       token.set(data.token);
       return data;
     } catch (error) {
+      console.log('error', error);
       return rejectWithValue(error.message);
     }
   },
@@ -28,9 +30,11 @@ export const registerUser = createAsyncThunk(
 export const loginUser = createAsyncThunk('auth/login', async (userData, { rejectWithValue }) => {
   try {
     const { data } = await axios.post(`/users/login`, userData);
-    token.set(data.token);
+    console.log('data', data);
+    data && data.token && token.set(data.token);
     return data;
   } catch (error) {
+    console.log('error', error);
     return rejectWithValue(error.message);
   }
 });
@@ -40,6 +44,7 @@ export const logoutUser = createAsyncThunk('auth/logout', async (userData, { rej
     await axios.post(`/users/logout`, userData);
     token.reset();
   } catch (error) {
+    console.log('error', error);
     return rejectWithValue(error.message);
   }
 });
@@ -51,12 +56,15 @@ export const currentUser = createAsyncThunk(
       const state = getState();
       const persistToken = state.auth.token;
       if (!persistToken) {
+        console.log('error persistToken');
         return rejectWithValue('error');
       }
       token.set(persistToken);
       const { data } = await axios.get(`/users/current`);
+      console.log('data', data);
       return data;
     } catch (error) {
+      console.log('error', error);
       return rejectWithValue(error.message);
     }
   },

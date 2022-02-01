@@ -1,10 +1,10 @@
-import { Routes, Route } from 'react-router-dom';
-
+import { Routes, Route, Navigate } from 'react-router-dom';
+import { useSelector, useDispatch } from 'react-redux';
 import { React, lazy, Suspense, useEffect } from 'react';
-import { useDispatch } from 'react-redux';
 
 import './App.scss';
 
+import authSelectors from './redux/auth/authSelectors';
 import Header from './components/Header/Header';
 import { currentUser } from './redux/auth/authOperations';
 
@@ -21,12 +21,15 @@ const NotFoundView = lazy(() =>
 );
 
 function App() {
+  const loggedIn = useSelector(authSelectors.getIsLoggedIn);
+
   const dispatch = useDispatch();
 
   useEffect(() => {
     dispatch(currentUser());
   }, [dispatch]);
 
+  console.log(loggedIn);
   return (
     <>
       <Suspense
@@ -39,9 +42,12 @@ function App() {
         <Routes>
           <Route path="/" element={<Header />}>
             <Route index element={<MainView />} />
-            <Route path="contacts" element={<PhonebookView />} />
-            <Route path="login" element={<LoginView />} />
-            <Route path="register" element={<RegisterView />} />
+            <Route
+              path="contacts"
+              element={loggedIn ? <PhonebookView /> : <Navigate to="../login" />}
+            />
+            <Route path="login" element={loggedIn ? <Navigate to="../" /> : <LoginView />} />
+            <Route path="register" element={loggedIn ? <Navigate to="../" /> : <RegisterView />} />
             <Route path="*" element={<NotFoundView />} />
           </Route>
         </Routes>
