@@ -1,5 +1,29 @@
+@import '../../helpers/variables.scss';
+
+.info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 280px;
+}
 .avatar {
+  border: 1px $button-bg-color solid;
+  border-radius: 50%;
+}
+.name {
+  font-weight: 700;
 }
 
-.name {
+.button {
+  width: 55px;
+  height: 30px;
+  color: $button-color;
+  background-color: $button-bg-color;
+  border-radius: 15px;
+
+  &:hover,
+  &:focus {
+    background-color: $button-active-bg-color;
+    box-shadow: $shadow-button;
+  }
 }

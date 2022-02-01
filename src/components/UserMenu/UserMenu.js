@@ -11,10 +11,12 @@ function UserMenu() {
   const avatar = defaultAvatar;
 
   return (
-    <div>
-      <img src={avatar} alt="" width={'32'} style={styles.avatar} />
-      <p style={styles.name}>Wellcome, {name}</p>
-      <button type="button" onClick={() => dispatch(logoutUser())}>
+    <div className={styles.info}>
+      <img className={styles.avatar} src={avatar} alt="" width={'32'} />
+      <p>
+        Wellcome, <span className={styles.name}>{name}</span>
+      </p>
+      <button className={styles.button} type="button" onClick={() => dispatch(logoutUser())}>
         Exit
       </button>
     </div>
