@@ -13,3 +13,7 @@
   composes: link;
   color: $accent-color;
 }
+
+.linkList {
+  display: flex;
+}

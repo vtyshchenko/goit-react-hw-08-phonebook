@@ -10,6 +10,10 @@ import styles from './Header.module.scss';
 
 export default function Header() {
   const loggedIn = useSelector(authSelectors.getIsLoggedIn);
+  const links = [
+    { path: '/register', name: 'Register' },
+    { path: '/login', name: 'Login' },
+  ];
 
   return (
     <>
@@ -20,7 +24,7 @@ export default function Header() {
           </CustomLink>
 
           {loggedIn && <CustomLink to="/contacts">Contacts</CustomLink>}
-          {loggedIn ? <UserMenu /> : <Navigation />}
+          {loggedIn ? <UserMenu /> : <Navigation linksData={links} />}
         </header>
 
         <Outlet />

@@ -13,10 +13,9 @@ export default function MainView() {
         <p className={styles.text}>
           This website is made for people to save contacts in the personal account. To save them,
           you should<CustomLink to="/register">register</CustomLink>or
-          <CustomLink to="/login">login</CustomLink>.
+          <CustomLink to="/login">login</CustomLink>
         </p>
       )}
-      ;
     </div>
   );
 }
